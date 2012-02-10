@@ -1,0 +1,44 @@
+# JBoss, Home of Professional Open Source.
+# Copyright (c) 2011, Red Hat, Inc., and individual contributors
+# as indicated by the @author tags. See the copyright.txt file in the
+# distribution for a full listing of individual contributors.
+#
+# This is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation; either version 2.1 of
+# the License, or (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this software; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+# 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+
+---------  JBossTS TxBridge Tests
+Author: Jonathan Halliday <jonathan.halliday@redhat.com>
+Author: Ivo Studensky <istudens@redhat.com>
+
+These tests have been derived from txbridge tests of JBOSSTS_4_16. The original tests 
+can be found here:
+http://anonsvn.jboss.org/repos/labs/labs/jbosstm/branches/JBOSSTS_4_16/txbridge/tests/
+
+The new tests are powered by Maven + Arquillian. The tests have been changed to work 
+on AS7 and JUnit test classes have been renamed to have distinct names in order to 
+allow being run by Surefire separately.
+
+
+--- Requirements:
+1. apache maven tool
+2. installed AS7
+
+--- Steps to run:
+
+1. git clone git@github.com:istudens/txbridge-tests.git
+2. cd txbridge-tests
+3. export JBOSS_HOME=<path to AS7>
+4. mvn clean test
