@@ -31,85 +31,61 @@ import javax.transaction.xa.XAException;
  *
  * @author Jonathan Halliday (jonathan.halliday@redhat.com) 2010-01
  */
-public class TestXAResource implements XAResource {
+public class TestXAResource extends TestXAResourceCommon implements XAResource {
     private static Logger log = Logger.getLogger(TestXAResource.class);
 
-    private int txTimeout;
-
-    private Xid currentXid;
-
-    private int prepareReturnValue = XAResource.XA_OK;
-
+    @Override
     public void commit(Xid xid, boolean b) throws XAException {
-        log.trace("TestXAResource.commit(Xid=" + xid + ", b=" + b + ")");
-        if (!xid.equals(currentXid)) {
-            log.trace("TestXAResource.commit - wrong Xid!");
-        }
-
-        currentXid = null;
-        TestXAResourceRecoveryHelper.getInstance().removeLog(xid);
+        super.commit(xid, b);
     }
 
+    @Override
     public void end(Xid xid, int i) throws XAException {
-        log.trace("TestXAResource.end(Xid=" + xid + ", b=" + i + ")");
+        super.end(xid, i);
     }
 
+    @Override
     public void forget(Xid xid) throws XAException {
-        log.trace("TestXAResource.forget(Xid=" + xid + ")");
-        if (!xid.equals(currentXid)) {
-            log.trace("TestXAResource.forget - wrong Xid!");
-        }
-        currentXid = null;
+        super.forget(xid);
     }
 
+    @Override
     public int getTransactionTimeout() throws XAException {
-        log.trace("TestXAResource.getTransactionTimeout() [returning " + txTimeout + "]");
-        return txTimeout;
+        return super.getTransactionTimeout();
     }
 
+    @Override
     public boolean isSameRM(XAResource xaResource) throws XAException {
-        log.trace("TestXAResource.isSameRM(xaResource=" + xaResource + ")");
-        return false;
+        return super.isSameRM(xaResource);
     }
 
+    @Override
     public int prepare(Xid xid) throws XAException {
-        log.trace("TestXAResource.prepare(Xid=" + xid + ") returning " + prepareReturnValue);
-
-        if (prepareReturnValue == XA_OK) {
-            TestXAResourceRecoveryHelper.getInstance().logPrepared(xid);
-        }
-        return prepareReturnValue;
+        return super.prepare(xid);
     }
 
+    @Override
     public Xid[] recover(int i) throws XAException {
-        log.trace("TestXAResource.recover(i=" + i + ")");
-        return new Xid[0];
+        return super.recover(i);
     }
 
+    @Override
     public void rollback(Xid xid) throws XAException {
-        log.trace("TestXAResource.rollback(Xid=" + xid + ")");
-        if (!xid.equals(currentXid)) {
-            log.trace("TestXAResource.rollback - wrong Xid!");
-        }
-        currentXid = null;
-        TestXAResourceRecoveryHelper.getInstance().removeLog(xid);
+        super.rollback(xid);
     }
 
+    @Override
     public boolean setTransactionTimeout(int i) throws XAException {
-        log.trace("TestXAResource.setTransactionTimeout(i=" + i + ")");
-        txTimeout = i;
-        return true;
+        return super.setTransactionTimeout(i);
     }
 
+    @Override
     public void start(Xid xid, int i) throws XAException {
-        log.trace("TestXAResource.start(Xid=" + xid + ", i=" + i + ")");
-        if (currentXid != null) {
-            log.trace("TestXAResource.start - wrong Xid!");
-        }
-        currentXid = xid;
+        super.start(xid, i);
     }
 
+    @Override
     public String toString() {
-        return new String("TestXAResourcee(" + txTimeout + ", " + currentXid + ")");
+        return new String("TestXAResource(" + super.toString() + ")");
     }
 }

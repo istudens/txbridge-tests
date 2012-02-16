@@ -24,7 +24,6 @@ import com.arjuna.ats.arjuna.common.recoveryPropertyManager;
 import org.jboss.arquillian.container.test.api.Config;
 import org.jboss.arquillian.container.test.api.ContainerController;
 import org.jboss.logging.Logger;
-import org.junit.Before;
 
 import java.io.*;
 import java.net.Socket;
@@ -49,8 +48,7 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
     protected abstract void instrumentationOnServerReboot() throws Exception;
 
 
-    @Before
-    public void setUp() throws Exception {
+    protected void cleanTxStore() throws Exception {
         String jbossHome = System.getenv("JBOSS_HOME");
         removeContents(new File(jbossHome, "standalone/data/tx-object-store/"));
     }
@@ -59,7 +57,7 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
     protected void rebootServer(ContainerController controller) throws Exception {
 
         instrumentor.removeLocalState();
-        File rulesFile = File.createTempFile("jbosstxbridgetests", "btm");
+        File rulesFile = File.createTempFile("jbosstxbridgetests", ".btm");
         rulesFile.deleteOnExit();
         instrumentor.setRedirectedSubmissionsFile(rulesFile);
 
@@ -71,8 +69,8 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
 
         // start up the server
         String javaVmArguments = System.getProperty("server.jvm.args").trim();
-        javaVmArguments += ",script:" + rulesFile.getCanonicalPath();     // this assumes -javaagent to be the last item in server.jvm.args
-        log.info("javaVmArguments = " + javaVmArguments);
+        javaVmArguments = javaVmArguments.replaceFirst("byteman-dtest.jar", "byteman-dtest.jar,script:" + rulesFile.getCanonicalPath());
+        log.trace("javaVmArguments = " + javaVmArguments);
         controller.start(CONTAINER, new Config().add("javaVmArguments", javaVmArguments).map());
     }
 
@@ -85,8 +83,8 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
         int port = recoveryPropertyManager.getRecoveryEnvironmentBean().getRecoveryPort();
         String host = recoveryPropertyManager.getRecoveryEnvironmentBean().getRecoveryAddress();
 
-        System.err.println("doRecovery#host = " + host);
-        System.err.println("doRecovery#port = " + port);
+        log.info("doRecovery#host = " + host);
+        log.info("doRecovery#port = " + port);
 
         BufferedReader in = null;
         PrintStream out = null;
@@ -105,9 +103,9 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
             // Receive pong message
             String inMessage = in.readLine();
 
-            System.err.println("inMessage = " + inMessage);
+            log.trace("inMessage = " + inMessage);
             if (!inMessage.equals("DONE")) {
-                System.err.println("Recovery failed with message: " + inMessage);
+                log.error("Recovery failed with message: " + inMessage);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -145,7 +143,7 @@ public abstract class AbstractCrashRecoveryTests extends AbstractBasicTests {
                     //System.err.println("Deleted: " + contents[index]);
                     contents[index].delete();
                 } else {
-                    System.err.println("Deleted: " + contents[index]);
+                    log.info("Deleted: " + contents[index]);
                     contents[index].delete();
                 }
             }

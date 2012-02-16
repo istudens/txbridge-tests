@@ -11,18 +11,13 @@
 
     <properties>
         <version.jbossas>7.1.0.Final-SNAPSHOT</version.jbossas>
-        <!--<version.jbossas>7.1.0.CR1b</version.jbossas>-->
-        <version.jbossts>4.16.1.Final</version.jbossts>
+        <version.jbossts>4.16.2.Final</version.jbossts>
         <version.arquillian.junit>1.0.0.CR7</version.arquillian.junit>
         <version.junit>4.8.2</version.junit>
         <version.byteman>2.0.0</version.byteman>
         <version.apache.httpcomponents>4.1.2</version.apache.httpcomponents>
 
         <byteman.home>${project.build.directory}/byteman</byteman.home>
-        <!--
-            In byteman.server.jvm.args the javaagent must be the last argument as it is extended by tests, see
-            org.jboss.jbossts.txbridge.tests.inbound.junit.InboundCrashRecoveryTestsryTests#rebootServer()
-        -->
         <byteman.server.jvm.args>
             -Dorg.jboss.byteman.debug=true -Dorg.jboss.byteman.verbose=true -Dorg.jboss.byteman.contrib.dtest.rmiregistry.port=1199
             -Djboss.modules.system.pkgs=org.jboss.byteman
@@ -32,42 +27,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-6.0</artifactId>
-            <version>1.0.0.Final</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>${version.arquillian.junit}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.byteman</groupId>
-            <artifactId>byteman</artifactId>
-            <version>${version.byteman}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.byteman</groupId>
-            <artifactId>byteman-dtest</artifactId>
-            <version>${version.byteman}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.jboss.jbossts</groupId>
             <artifactId>jbossxts-api</artifactId>
@@ -377,28 +336,53 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>1.0.0.Final</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <version>${version.arquillian.junit}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.byteman</groupId>
+            <artifactId>byteman</artifactId>
+            <version>${version.byteman}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.byteman</groupId>
+            <artifactId>byteman-dtest</artifactId>
+            <version>${version.byteman}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${version.apache.httpcomponents}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>${version.apache.httpcomponents}</version>
-        </dependency>
-
-        <!-- bad deps of Arq, 7.1.0.Final-SNAPSHOT needs these -->
-        <dependency>
-            <groupId>org.jboss.remoting3</groupId>
-            <artifactId>jboss-remoting</artifactId>
-            <version>3.2.0.CR9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <version>3.1.0.CR2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -479,7 +463,6 @@
                     <!-- Prevent test and server output appearing in console. -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <enableAssertions>true</enableAssertions>
-                    <!--<workingDirectory>${project.build.directory}/workdir</workingDirectory>-->
 
                     <!-- Tests to execute. -->
                     <includes>

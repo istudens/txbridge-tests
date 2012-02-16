@@ -25,6 +25,10 @@ import org.jboss.logging.Logger;
 import org.jboss.jbossts.xts.recovery.participant.at.XTSATRecoveryManager;
 import org.jboss.jbossts.xts.recovery.participant.at.XTSATRecoveryModule;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import java.io.ObjectInputStream;
 
 /**
@@ -32,13 +36,16 @@ import java.io.ObjectInputStream;
  *
  * @author Jonathan Halliday (jonathan.halliday@redhat.com) 2010-05
  */
+@Singleton
+@Startup
 public class TestRecoveryModule implements XTSATRecoveryModule {
     private static final Logger log = Logger.getLogger(TestRecoveryModule.class);
 
     /**
      * MC lifecycle callback, used to register components with the recovery manager.
      */
-    public void start() {
+    @PostConstruct
+    public void postConstruct() {
         log.info("TestRecoveryModule starting");
 
         //FIXME this is ugly hack!! it seems that dependency names from jboss-beans.xml no longer work in AS7!?
@@ -59,7 +66,8 @@ public class TestRecoveryModule implements XTSATRecoveryModule {
     /**
      * MC lifecycle callback, used to unregister components from the recovery manager.
      */
-    public void stop() {
+    @PreDestroy
+    public void preDestroy() {
         log.info("TestRecoveryModule stopping");
 
         XTSATRecoveryManager.getRecoveryManager().unregisterRecoveryModule(this);

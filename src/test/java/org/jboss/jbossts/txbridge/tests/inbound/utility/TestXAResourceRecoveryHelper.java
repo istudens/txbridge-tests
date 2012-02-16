@@ -27,6 +27,10 @@ import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import org.jboss.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
@@ -41,6 +45,8 @@ import java.util.Vector;
  *
  * @author Jonathan Halliday (jonathan.halliday@redhat.com) 2010-01
  */
+@Singleton
+@Startup
 public class TestXAResourceRecoveryHelper implements XAResourceRecoveryHelper {
     private static Logger log = Logger.getLogger(TestXAResourceRecoveryHelper.class);
 
@@ -59,18 +65,20 @@ public class TestXAResourceRecoveryHelper implements XAResourceRecoveryHelper {
     /**
      * MC lifecycle callback, used to register the recovery module with the transaction manager.
      */
-    public void start() {
+    @PostConstruct
+    public void postConstruct() {
         log.info("TestXAResourceRecoveryHelper starting");
 
         getRecoveryModule().addXAResourceRecoveryHelper(getInstance());
 
-        recoverFromDisk();
+        getInstance().recoverFromDisk();
     }
 
     /**
      * MC lifecycle callback, used to unregister the recovery module from the transaction manager.
      */
-    public void stop() {
+    @PreDestroy
+    public void preDestroy() {
         log.info("TestXAResourceRecoveryHelper stopping");
 
         getRecoveryModule().removeXAResourceRecoveryHelper(getInstance());
@@ -130,7 +138,8 @@ public class TestXAResourceRecoveryHelper implements XAResourceRecoveryHelper {
 
     public Xid[] recover() {
         log.trace("recover()");
-
+        log.trace("returning " + preparedXids.size() + " Xids");
+        log.trace("preparedXids.toArray(new Xid[preparedXids.size()]) = " + preparedXids.toArray(new Xid[preparedXids.size()]));
         return preparedXids.toArray(new Xid[preparedXids.size()]);
     }
 
@@ -180,6 +189,5 @@ public class TestXAResourceRecoveryHelper implements XAResourceRecoveryHelper {
         File logFile = new File(logDir, "TestXAResource.ser");
         return logFile;
     }
-
 
 }

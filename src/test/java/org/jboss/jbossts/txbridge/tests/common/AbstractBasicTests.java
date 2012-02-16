@@ -26,8 +26,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.byteman.agent.submit.Submit;
 import org.jboss.byteman.contrib.dtest.Instrumentor;
-import org.jboss.jbossts.txbridge.tests.inbound.utility.TestXAResource;
-import org.jboss.jbossts.txbridge.tests.outbound.utility.TestDurableParticipant;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -59,7 +57,7 @@ public abstract class AbstractBasicTests {
                 .addPackage("org.jboss.jbossts.txbridge.tests.inbound.service")
                 .addPackage("org.jboss.jbossts.txbridge.tests.inbound.utility")
                 .addAsResource("inbound/jaxws-handlers-server.xml", "jaxws-handlers-server.xml")
-                .addAsManifestResource("inbound/jboss-beans.xml", "jboss-beans.xml")
+//                .addAsManifestResource("inbound/jboss-beans.xml", "jboss-beans.xml")
                 .addAsManifestResource(new StringAsset("Dependencies: org.jboss.xts,org.jboss.jts\n"), "MANIFEST.MF");
 //        archive.as(ZipExporter.class).exportTo(new File("/tmp/deployment.zip"), true);
         return archive;
@@ -77,7 +75,7 @@ public abstract class AbstractBasicTests {
                 .addPackage("org.jboss.jbossts.txbridge.tests.outbound.service")
                 .addPackage("org.jboss.jbossts.txbridge.tests.outbound.utility")
                 .addAsResource("outbound/jaxws-handlers-server.xml", "jaxws-handlers-server.xml")
-                .addAsManifestResource("outbound/jboss-beans.xml", "jboss-beans.xml")
+//                .addAsManifestResource("outbound/jboss-beans.xml", "jboss-beans.xml")
                 .addAsManifestResource(new StringAsset("Dependencies: org.jboss.xts,org.jboss.jts\n"), "MANIFEST.MF");
         return archive;
     }

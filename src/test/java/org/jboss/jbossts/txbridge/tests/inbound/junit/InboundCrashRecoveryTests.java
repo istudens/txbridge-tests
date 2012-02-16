@@ -77,9 +77,11 @@ public class InboundCrashRecoveryTests extends AbstractCrashRecoveryTests {
 
     @Before
     public void setUp() throws Exception {
+        cleanTxStore();
+
         // start up the appserver
         String javaVmArguments = System.getProperty("server.jvm.args").trim();
-        log.info("javaVmArguments = " + javaVmArguments);
+        log.trace("javaVmArguments = " + javaVmArguments);
         controller.start(CONTAINER, new Config().add("javaVmArguments", javaVmArguments).map());
         // deploy the tests
         deployer.deploy(INBOUND_SERVICE_DEPLOYMENT_NAME);
