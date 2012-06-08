@@ -10,11 +10,11 @@
     <packaging>jar</packaging>
 
     <properties>
-        <version.jbossas>7.1.0.Final-SNAPSHOT</version.jbossas>
-        <version.jbossts>4.16.2.Final</version.jbossts>
-        <version.arquillian.junit>1.0.0.CR7</version.arquillian.junit>
+        <version.jbossas>7.1.1.Final</version.jbossas>
+        <version.jbossts>4.16.4.Final</version.jbossts>
+        <version.arquillian.junit>1.0.0.Final</version.arquillian.junit>
         <version.junit>4.8.2</version.junit>
-        <version.byteman>2.0.0</version.byteman>
+        <version.byteman>2.0.1</version.byteman>
         <version.apache.httpcomponents>4.1.2</version.apache.httpcomponents>
 
         <byteman.home>${project.build.directory}/byteman</byteman.home>
@@ -24,6 +24,8 @@
             -javaagent:${byteman.home}/byteman.jar=port:9091,listener:true,sys:${byteman.home}/byteman-dtest.jar
         </byteman.server.jvm.args>
         <jpda.server.jvm.args></jpda.server.jvm.args>
+        <memory.server.jvm.args>-Xmx512m -XX:MaxPermSize=256m</memory.server.jvm.args>
+        <surefire.server.jvm.args>${memory.server.jvm.args} ${byteman.server.jvm.args} ${jpda.server.jvm.args}</surefire.server.jvm.args>
     </properties>
 
     <dependencies>
@@ -459,6 +461,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.11</version>
                 <configuration>
                     <!-- Prevent test and server output appearing in console. -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -471,8 +474,8 @@
 
                     <!-- System properties passed to test cases -->
                     <systemPropertyVariables>
-                        <!-- Used in arquillian.xml - arguments for all JBoss AS instances. -->
-                        <server.jvm.args>${byteman.server.jvm.args}</server.jvm.args>
+                        <!-- Used in arquillian.xml -->
+                        <server.jvm.args>${surefire.server.jvm.args}</server.jvm.args>
                         <java.rmi.server.codebase>file://target/test-classes/</java.rmi.server.codebase>
                     </systemPropertyVariables>
 
